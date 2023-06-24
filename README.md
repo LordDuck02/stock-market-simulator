@@ -1,2 +1,3 @@
 # stock-market-simulator
-made in c++ cuz its cool
+made in c++ entirely by me
+go gamble
