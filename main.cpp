@@ -16,10 +16,23 @@ public:
     void setEth() {
         r = 0.09;
     }
+    void setDoge() {
+        r = 0.10;
+    }
+    void setCIC() {
+        r = 0.05;
+    }
+
     void applyRandomFluctuation() {
         std::srand(static_cast<unsigned int>(std::time(nullptr)));
         double fluctuation = (std::rand() % 101 - 50) / 100.0;
-        r += fluctuation;
+
+        double crashChance = 0.2;
+        if (std::rand() / static_cast<double>(RAND_MAX) < crashChance) {
+            r = -std::abs(r) * fluctuation;
+        } else {
+            r += fluctuation;
+        }
     }
 };
 
@@ -31,29 +44,37 @@ int main() {
     char escolha;
 
     std::cout << "Which coin would you like to invest in?" << std::endl;
-    std::cout << "[1] - Fockscoin\n[2] - Bitcoin\n[3] - Ethereum" << std::endl;
+    std::cout << "[1] - Fockscoin\n[2] - Bitcoin\n[3] - Ethereum\n[4] - Dogecoin\n[5] - CIC\n[6] - Robuk" << std::endl;
     std::cin >> escolha;
 
-    if (escolha == '1') {
-        coins.setFocksCoin();
+    switch (escolha) {
+        case '1':
+            coins.setFocksCoin();
+            break;
+        case '2':
+            coins.setBitcoin();
+            break;
+        case '3':
+            coins.setEth();
+            break;
+        case '4':
+            coins.setDoge();
+            break;
+        case '5':
+            coins.setCIC();
+            break;
+        default:
+            std::cout << "Invalid choice!" << std::endl;
+            return 0;
     }
-    else if (escolha == '2') {
-        coins.setBitcoin();
-    }
-    else if (escolha == '3') {
-        coins.setEth();
-    }
-    else {
-        std::cout << "Invalid choice!" << std::endl;
-        return 0;
-    }
-    std::cout << "How much money do u want to invest?" << std::endl;
+
+    std::cout << "How much money do you want to invest?" << std::endl;
     std::cin >> c;
     std::cout << "How many days do you want to simulate?" << std::endl;
     std::cin >> dinput;
 
     for (int day = 1; day <= dinput; day++) {
-        a = c * pow(1 + coins.r, day);
+        coins.applyRandomFluctuation();
         a = c * std::pow(1 + coins.r, day);
         std::cout << "Day " << day << " - Balance: " << a << std::endl;
     }
