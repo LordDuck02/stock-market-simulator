@@ -24,11 +24,14 @@ public:
     }
 
     void applyRandomFluctuation() {
-        std::srand(static_cast<unsigned int>(std::time(nullptr)));
-        double fluctuation = (std::rand() % 101 - 50) / 100.0;
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<double> dis(-0.5, 0.5);
+        double fluctuation = dis(gen);
 
         double crashChance = 0.2;
-        if (std::rand() / static_cast<double>(RAND_MAX) < crashChance) {
+        std::uniform_real_distribution<double> crashDis(0.0, 1.0);
+        if (crashDis(gen) < crashChance) {
             r = -std::abs(r) * fluctuation;
         } else {
             r += fluctuation;
@@ -38,45 +41,56 @@ public:
 
 int main() {
     Coin coins;
-    float a;
-    int dinput;
-    float c;
-    char escolha;
+    float investment;
+    int simulationDays;
+    char choice;
 
-    std::cout << "Which coin would you like to invest in?" << std::endl;
-    std::cout << "[1] - Fockscoin\n[2] - Bitcoin\n[3] - Ethereum\n[4] - Dogecoin\n[5] - CIC\n[6] - Robuk" << std::endl;
-    std::cin >> escolha;
+    while (true) {
+        std::cout << "Which coin would you like to invest in?" << std::endl;
+        std::cout << "[1] - Fockscoin\n[2] - Bitcoin\n[3] - Ethereum\n[4] - Dogecoin\n[5] - CIC\n[6] - Robuk" << std::endl;
+        std::cin >> choice;
 
-    switch (escolha) {
-        case '1':
-            coins.setFocksCoin();
-            break;
-        case '2':
-            coins.setBitcoin();
-            break;
-        case '3':
-            coins.setEth();
-            break;
-        case '4':
-            coins.setDoge();
-            break;
-        case '5':
-            coins.setCIC();
-            break;
-        default:
-            std::cout << "Invalid choice!" << std::endl;
-            return 0;
-    }
+        switch (choice) {
+            case '1':
+                coins.setFocksCoin();
+                break;
+            case '2':
+                coins.setBitcoin();
+                break;
+            case '3':
+                coins.setEth();
+                break;
+            case '4':
+                coins.setDoge();
+                break;
+            case '5':
+                coins.setCIC();
+                break;
+            default:
+                std::cout << "Invalid choice!" << std::endl;
+                continue;
+        }
 
-    std::cout << "How much money do you want to invest?" << std::endl;
-    std::cin >> c;
-    std::cout << "How many days do you want to simulate?" << std::endl;
-    std::cin >> dinput;
+        std::cout << "How much money do you want to invest?" << std::endl;
+        std::cin >> investment;
+        std::cout << "How many days do you want to simulate?" << std::endl;
+        std::cin >> simulationDays;
 
-    for (int day = 1; day <= dinput; day++) {
-        coins.applyRandomFluctuation();
-        a = c * std::pow(1 + coins.r, day);
-        std::cout << "Day " << day << " - Balance: " << a << std::endl;
+        float balance = investment;
+
+        for (int day = 1; day <= simulationDays; day++) {
+            coins.applyRandomFluctuation();
+            float earned = balance * coins.r;
+            balance += earned;
+            std::cout << "Day " << day << " - Balance: " << balance << std::endl;
+        }
+
+        std::cout << "Do you want to invest again? (y/n)" << std::endl;
+        char answer;
+        std::cin >> answer;
+
+        if (answer != 'y' && answer != 'Y')
+            break;
     }
 
     return 0;
