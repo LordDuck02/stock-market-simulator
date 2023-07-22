@@ -47,7 +47,7 @@ int main() {
 
     while (true) {
         std::cout << "Which coin would you like to invest in?" << std::endl;
-        std::cout << "[1] - Fockscoin\n[2] - Bitcoin\n[3] - Ethereum\n[4] - Dogecoin\n[5] - CIC\n[6] - Robuk" << std::endl;
+        std::cout << "[1] - Fockscoin\n[2] - Bitcoin\n[3] - Ethereum\n[4] - Dogecoin\n[5] - CIC" << std::endl;
         std::cin >> choice;
 
         switch (choice) {
