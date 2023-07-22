@@ -17,7 +17,7 @@ public:
         r = 0.09;
     }
     void setDoge() {
-        r = 0.10;
+        r = 0.03;
     }
     void setCIC() {
         r = 0.05;
